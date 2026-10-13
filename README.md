@@ -26,13 +26,14 @@ For a plain-language summary for the owner, see [PITCH.md](PITCH.md).
 - **Booking in as few taps as possible:** "Book now" sits in the header
   and in a sticky bottom bar on phones, so Blismo is one tap away, and
   any barber is two taps away (Barbers → "Book with …").
-- **Speed:** static HTML with almost no JavaScript (78 KiB home page vs
-  949 KiB before). Lighthouse 100 across the board on a
-  production-equivalent build.
+- **Speed:** static HTML with almost no JavaScript; photos resized and
+  served as WebP at the size each screen needs (233 KiB home page vs
+  949 KiB before). Lighthouse 99–100 on a production-equivalent build.
 - **Accessibility:** WCAG 2.1 AA. Zero axe-core violations, keyboard
   navigable, visible focus, reduced motion respected.
-- **Honesty:** nothing invented. Unconfirmed hours, prices, handles and
-  reviews show clear "TBD" or empty states, never guesses.
+- **Honesty:** nothing invented. Unconfirmed hours, prices, handles,
+  bios and FAQ answers are simply not shown to visitors (never guessed),
+  and pages with no real content yet stay out of the menu.
 
 Booking stays on **Blismo** and messaging stays on **Instagram**. There
 is no backend and the site collects no personal data.
@@ -45,7 +46,8 @@ is no backend and the site collects no personal data.
 | [Tailwind CSS](https://tailwindcss.com) 4 | Utility classes generated from design tokens | Keeps spacing and color on the design system |
 | TypeScript | Type-checks the content file | A barber missing a booking ID fails the build instead of shipping a broken button |
 | @astrojs/sitemap | Generates `sitemap-index.xml` | Standard SEO plumbing, zero config |
-| Fontsource | Self-hosted Big Shoulders Display + Instrument Sans | No third-party font requests; preloaded to avoid layout shift |
+| Fontsource | Self-hosted Jost (one family) | Geometric like the shop's logo; no third-party font requests; preloaded to avoid layout shift |
+| `astro:assets` | Resizes photos and converts them to WebP at build time | Real photos without slowing phones down |
 | playwright-core (dev) | Renders the share image and favicons from HTML | Images use the real brand fonts; regenerate with one command |
 | [Netlify](https://netlify.com) | Hosting and CDN | Free tier, preview URLs, settings live in `netlify.toml` |
 
@@ -90,10 +92,11 @@ has comments explaining what to fill in.
 | Prices / durations | `services[].priceUsd` and `durationMinutes` (`null` shows "TBD") |
 | Add or remove a barber | Add or delete an entry in `barbers` (name, Blismo `employeeId`, photo, bio, specialty) |
 | A barber's Instagram | `barbers[].instagram`: set the handle and `confirmed: true` to show the DM button |
-| Barber photo | Put the image in `public/barbers/` and set `photo: "/barbers/name.jpg"` |
-| FAQ answers | `faq[].answer` (`null` shows "Answer TBD") |
-| Reviews | Add real reviews to `reviews` with `approvedByOwner: true` |
-| Gallery | Add photos to `public/gallery/` and list them in `gallery` |
+| Barber photo | Put the image in `src/assets/barbers/`, import it at the top of `site.ts`, and set `photo` |
+| Hero video | Put the MP4 in `public/` and set `hero.videoSrc` (e.g. `"/hero.mp4"`) |
+| FAQ answers | `faq[].answer` (`null` hides the question; the FAQ menu link appears at 3+ answers) |
+| Reviews | Add real reviews to `reviews` with `approvedByOwner: true` (the menu link appears with the first one) |
+| Gallery | Add photos to `src/assets/gallery/`, import them and list them in `gallery` (the menu link appears at 3+ photos) |
 | Address / phone | `business` (must match Google Business Profile exactly) |
 
 **Individual barbers' availability lives in Blismo**, not on the
@@ -107,6 +110,7 @@ link (`…/appointments?employeeId=1275`).
 
 ```
 src/content/site.ts     All business content (the file to edit)
+src/assets/             Barber portraits, shop photo, logo
 src/pages/              One file per page; services/[slug] makes 3 pages
 src/components/         Reusable pieces (Button, BarberCard, HoursList…)
 src/layouts/            Page shell with SEO tags and structured data

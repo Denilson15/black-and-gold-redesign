@@ -38,10 +38,11 @@ site gives Google very little to go on:
   barber's schedule stay in Blismo. Nothing changes for the barbers.
 - **Instagram messages.** Each barber can get a "Message on Instagram"
   button for questions, once we confirm their handle.
-- **Same black and gold, sharpened.** The look is inspired by
-  gold-leaf barbershop window lettering, and it's clean and easy to
-  read.
-- **Fast.** The home page is about 12 times lighter than today's.
+- **Your brand, sharpened.** Your BG badge, your gold, your barbers'
+  portraits and your shop photos, with clean black, white and gold
+  sections and classy spaced-out lettering that matches the logo.
+- **Fast.** The home page is about 4 times lighter than today's, even
+  with full-size photos.
 - **Works for everyone.** It's built to accessibility standards
   (WCAG 2.1 AA), which also protects the shop from ADA complaints.
 - **Easy to update.** Hours, prices and barbers all live in one simple
@@ -52,12 +53,12 @@ site gives Google very little to go on:
 | | Speed | Accessibility | Best practices | SEO |
 |---|---|---|---|---|
 | **Current site** (phone) | 65 | 98 | 96 | 92 |
-| **New site** (phone) | **100** | **100** | **100** | **100** |
+| **New site** (phone) | **99** | **100** | **100** | **100** |
 | **Current site** (computer) | 84 | 98 | 96 | 92 |
 | **New site** (computer) | **100** | **100** | **100** | **100** |
 
 The current site's main content takes about **8 seconds** to show up on
-a phone; the new one takes about **1.4 seconds**. (Tested 2026-10-13.
+a phone; the new one takes about **2 seconds**. (Tested 2026-10-13.
 The new site was tested before going live, so we'll re-check both on
 Google's PageSpeed Insights once it's online.)
 
@@ -68,8 +69,8 @@ search.
 
 ## What we need from you
 
-Nothing ships with a guess. These are placeholders on the new site
-until you confirm them:
+Nothing ships with a guess. Anything unconfirmed is simply left off the
+new site until you confirm it:
 
 **Shop details**
 1. Your real hours for each day.
@@ -85,8 +86,10 @@ until you confirm them:
 **Barbers**
 9. Each barber's Instagram handle. (Jamie, Francis, Mel, Joe and Mark
    are all placeholders right now.)
-10. Each barber's photo, a short bio and their specialty, with their
-    OK to use them.
+10. A short bio and specialty for each barber. (The preview uses the
+    barber portraits, logo and shop photo from your current site;
+    please confirm we can keep using them, and each barber is OK with
+    their portrait.)
 11. Please tap each barber's "Book with" button once to confirm it
     opens the right calendar.
 
@@ -99,13 +102,14 @@ until you confirm them:
 **Photos and reviews**
 16. Cut photos we can use for the gallery, and who took them.
 17. Any reviews you're happy for us to quote on the site.
-18. A high-quality copy of your logo.
+18. The original logo files (vector/SVG if you have them).
 
 **Accounts and choices**
 19. Who owns the domain blackandgoldeastbay.com, and where is it
     registered?
 20. Who manages your Google Business Profile?
-21. Do you want to keep the background video?
+21. Can you send the original hero video file ("BGEB Hero Video.mp4")?
+    The new site can play it behind the headline.
 22. Squarespace currently stops AI assistants (like ChatGPT) from
     reading your site. Keep that, or let them recommend you?
 23. After launch, who updates hours when they change?

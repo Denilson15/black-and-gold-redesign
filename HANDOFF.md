@@ -21,12 +21,15 @@ full list of questions is in [PITCH.md](PITCH.md#what-we-need-from-you).
       bio, specialty
 - [ ] FAQ answers (walk-ins, kids, payment, cancellation, parking)
 - [ ] Reviews: real, owner-approved, `approvedByOwner: true`
+- [ ] Written OK to use the logo, shop photo and barber portraits taken
+      from the current site (each barber for their own portrait)
+- [ ] Hero video file in `public/` and `hero.videoSrc` set (optional)
 - [ ] Gallery photos (with permission and photographer credit if needed)
-- [ ] Official logo file, if the owner wants it instead of the wordmark
 - [ ] Owner's decision on AI crawlers (add rules to
       `src/pages/robots.txt.ts` if they want them blocked)
-- [ ] Search the built site for "TBD" and "coming soon"; none should be
-      left: `grep -rn "TBD\|coming soon" dist/`
+- [ ] Check `site.ts` for remaining `null` values and `confirmed: false`
+      (unconfirmed items are hidden from visitors, so nothing looks
+      broken, but they should be filled in or deliberately left out)
 
 ## 2. Turn off concept mode
 

@@ -1,8 +1,9 @@
 # Accessibility review
 
-**Standard:** WCAG 2.1 AA · **Date:** 2026-10-13 · **Scope:** all 12
-pages (including the 404), at phone (390px), desktop (1366px) and
-320px width (equivalent to 400% zoom).
+**Standard:** WCAG 2.1 AA · **Date:** 2026-10-13, re-run after the
+visual redesign · **Scope:** all 12 pages (including the 404), at
+phone (390px), desktop (1366px) and 320px width (equivalent to 400%
+zoom).
 
 ## Summary
 
@@ -25,17 +26,20 @@ pages (including the 404), at phone (390px), desktop (1366px) and
 
 | Element | Foreground | Background | Ratio | Needed | Pass |
 |---|---|---|---|---|---|
-| Body text | #EDEDED | #000000 | 17.9:1 | 4.5:1 | ✅ |
-| Secondary text | #A6A6A6 | #000000 | 8.6:1 | 4.5:1 | ✅ |
-| Secondary text on panels | #A6A6A6 | #1A1A1A | 7.1:1 | 4.5:1 | ✅ |
-| Gold headings | #FFC500 | #000000 | 13.2:1 | 3:1 | ✅ |
-| Button text | #000000 | #FFC500 | 13.2:1 | 4.5:1 | ✅ |
-| Button borders | #6B6B6B | #000000 | 3.9:1 | 3:1 | ✅ |
-| Focus ring | #FFC500 | #000000 | 13.2:1 | 3:1 | ✅ |
+| Body text on black | #F2F2F2 | #000000 | 18.8:1 | 4.5:1 | ✅ |
+| Secondary text on black | #B3B3B3 | #000000 | 10.0:1 | 4.5:1 | ✅ |
+| Text on white | #0A0A0A | #FFFFFF | 19.8:1 | 4.5:1 | ✅ |
+| Secondary text on white | #575757 | #FFFFFF | 7.2:1 | 4.5:1 | ✅ |
+| Text on gold (buttons, footer) | #0A0A0A | #FCB125 | 10.8:1 | 4.5:1 | ✅ |
+| Gold links on black | #FCB125 | #000000 | 11.5:1 | 4.5:1 | ✅ |
+| Button borders on black | #737373 | #000000 | 4.4:1 | 3:1 | ✅ |
+| Focus ring (black sections) | #FCB125 | #000000 | 11.5:1 | 3:1 | ✅ |
+| Focus ring (white/gold sections) | #0A0A0A | #FFFFFF / #FCB125 | ≥10.8:1 | 3:1 | ✅ |
+| Hero text over photo | #F2F2F2 | photo under a 70–100% black overlay | ≥7.8:1 (worst case: a pure white pixel under 70% black) | 4.5:1 | ✅ |
 
 ## Keyboard
 
-Tab order on the home page: Skip to content → wordmark → main nav →
+Tab order on the home page: Skip to content → logo → main nav →
 Book now (header) → hero Book now → Call → address phone → Get
 directions → … → footer. The FAQ and the mobile menu use native
 `<details>` (Enter/Space toggles). The map loads with a real `<button>`.
@@ -45,8 +49,9 @@ directions → … → footer. The FAQ and the mobile menu use native
 - Touch targets: every button is at least 48px tall. Footer text links
   are 40px tall, which meets WCAG 2.2's 24px minimum (the 44px figure
   is the stricter AAA level).
-- Barber photos, once added, get alt text with the barber's name;
-  gallery photos need a description of the cut (enforced by the build
-  check, which fails on any image without alt text).
+- Barber portraits have alt text with the barber's name; the hero
+  photo describes the barber station. Logos beside the shop's name are
+  marked decorative (`alt=""`). The build check fails on any image
+  with no alt attribute.
 - Still recommended before launch: a quick pass with VoiceOver on an
   iPhone, which automated tools can't replace.
