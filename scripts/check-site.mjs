@@ -4,8 +4,8 @@
  * instead of shipping.
  *
  * Checks every page for: one h1, a unique title and meta description,
- * a canonical link, valid JSON-LD, alt text on every image, internal
- * links that resolve, and booking links that point at Blismo.
+ * a canonical link, valid JSON-LD, an alt attribute on every image,
+ * internal links that resolve, and booking links that point at Blismo.
  */
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -88,9 +88,11 @@ for (const file of pages) {
         }
     }
 
+    // Every image needs an alt attribute. An empty one (alt="") marks a
+    // decorative image, like the logo beside the shop's name.
     for (const [tag] of html.matchAll(/<img\b[^>]*>/g)) {
-        if (!/\salt="[^"]+"/.test(tag)) {
-            fail(page, `image without alt text: ${tag.slice(0, 80)}`);
+        if (!/\salt(=|\s|>)/.test(tag)) {
+            fail(page, `image without alt attribute: ${tag.slice(0, 80)}`);
         }
     }
 
