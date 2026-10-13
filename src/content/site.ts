@@ -13,6 +13,20 @@
  * - Placeholders are listed in PITCH.md under "Open questions".
  */
 
+import type { ImageMetadata } from "astro";
+
+/*
+ * Photos come from the shop's current website, used in this private
+ * concept preview only. The owner must confirm permission (and each
+ * barber their portrait) before launch. See PITCH.md.
+ */
+import jamiePhoto from "../assets/barbers/jamie-anabeza.webp";
+import francisPhoto from "../assets/barbers/francis-g.webp";
+import melPhoto from "../assets/barbers/mel.jpg";
+import joePhoto from "../assets/barbers/joe-the-barber.webp";
+import markPhoto from "../assets/barbers/mark-deguzman.webp";
+import toolsPhoto from "../assets/shop/tools.webp";
+
 // ---------------------------------------------------------------------
 // Concept / pitch mode
 // ---------------------------------------------------------------------
@@ -63,8 +77,8 @@ export interface Barber {
     /** Blismo employeeId used in the per-barber booking link. */
     blismoEmployeeId: number;
     instagram: InstagramHandle | null;
-    /** Path under /public, or null to show the monogram placeholder. */
-    photo: string | null;
+    /** Portrait (imported from src/assets/barbers), or null. */
+    photo: ImageMetadata | null;
     /** In the barber's own words. null shows a placeholder. */
     bio: string | null;
     specialty: string | null;
@@ -155,6 +169,25 @@ export const business = {
 };
 
 // ---------------------------------------------------------------------
+// Hero
+// ---------------------------------------------------------------------
+
+export const hero = {
+    /** Shown behind the headline (and as the video's poster frame). */
+    image: toolsPhoto,
+    imageAlt:
+        "Combs, brushes and shears laid out at a barber station at " +
+        "Black & Gold East Bay",
+    /*
+     * The shop's hero video ("BGEB Hero Video.mp4" on the current
+     * site). Put the file in /public and set e.g. "/hero.mp4". null
+     * shows the photo only. The video never plays for visitors who
+     * turn on reduced motion.
+     */
+    videoSrc: null as string | null,
+};
+
+// ---------------------------------------------------------------------
 // Booking (Blismo is the single source of truth for appointments)
 // ---------------------------------------------------------------------
 
@@ -194,7 +227,7 @@ export const hours = {
 /*
  * Names and Blismo IDs come from the live site (2026-10-13).
  * Instagram handles are PLACEHOLDERS from the brief, unconfirmed, so no
- * DM button shows for them yet. Photos need each barber's permission.
+ * DM button shows for them yet. Portraits are from the current site.
  */
 export const barbers: Barber[] = [
     {
@@ -202,7 +235,7 @@ export const barbers: Barber[] = [
         name: "Jamie Anabeza",
         blismoEmployeeId: 1275,
         instagram: { handle: "placeholder_jamie", confirmed: false },
-        photo: null,
+        photo: jamiePhoto,
         bio: null,
         specialty: null,
     },
@@ -211,7 +244,7 @@ export const barbers: Barber[] = [
         name: "Francis G",
         blismoEmployeeId: 1276,
         instagram: { handle: "placeholder_francis", confirmed: false },
-        photo: null,
+        photo: francisPhoto,
         bio: null,
         specialty: null,
     },
@@ -220,7 +253,7 @@ export const barbers: Barber[] = [
         name: "Mel",
         blismoEmployeeId: 1327,
         instagram: { handle: "placeholder_mel", confirmed: false },
-        photo: null,
+        photo: melPhoto,
         bio: null,
         specialty: null,
     },
@@ -229,7 +262,7 @@ export const barbers: Barber[] = [
         name: "Joe the Barber",
         blismoEmployeeId: 1321,
         instagram: { handle: "placeholder_joe", confirmed: false },
-        photo: null,
+        photo: joePhoto,
         bio: null,
         specialty: null,
     },
@@ -238,7 +271,7 @@ export const barbers: Barber[] = [
         name: "Mark DeGuzman",
         blismoEmployeeId: 1320,
         instagram: { handle: "placeholder_mark", confirmed: false },
-        photo: null,
+        photo: markPhoto,
         bio: null,
         specialty: null,
     },
@@ -362,12 +395,10 @@ export const reviews: Review[] = [];
 // ---------------------------------------------------------------------
 
 export interface GalleryPhoto {
-    /** Path under /public. */
-    src: string;
+    /** Imported from src/assets (Astro optimizes and resizes it). */
+    src: ImageMetadata;
     /** Describe the cut, e.g. "Skin fade with a hard part". */
     alt: string;
-    width: number;
-    height: number;
 }
 
 export const gallery: GalleryPhoto[] = [];
