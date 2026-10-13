@@ -1,7 +1,7 @@
 # Phase 1 — Audit & Plan
 
-Status: **decisions made; waiting on network access to finish the
-audit before building.**
+Status: **audit complete; plan approved in part (see Decisions).
+Waiting on the go-ahead to start building.**
 
 ## Decisions (2026-10-13)
 - **Hosting:** Netlify (a preview deploy with noindex during the pitch).
@@ -10,84 +10,113 @@ audit before building.**
   CMS can be added later on top of the same file.
 - **Services:** three dedicated service pages, folded back into one if
   the owner can't supply enough distinct detail.
-- **Audit:** finish Section 1 (live-site audit, before Lighthouse
-  scores, Blismo barber IDs) before building, once the domains below
-  are allowed.
 
 ---
 
-## 0. Blockers and caveats (read first)
+## 0. Caveats (read first)
 
-- **I could not reach the live site.** This build environment's network
-  policy denies `www.blackandgoldeastbay.com`, `blackandgoldeastbay.com`
-  and `blismo.com` (the proxy returns HTTP 403). The shared Google
-  PageSpeed API key is also over its daily quota. Section 1 is therefore
-  a **checklist with your reported findings**, not a completed audit. I
-  have not filled it in with guesses.
-- **To unblock it:** in the cloud environment's settings (the
-  environment menu in the session title bar → Edit → Network access),
-  add these allowed domains:
-  `blackandgoldeastbay.com`, `www.blackandgoldeastbay.com`,
-  `blismo.com`, `images.squarespace-cdn.com`, `static1.squarespace.com`.
-  Steps: https://code.claude.com/docs/en/cloud-environments#network-access.
-  Once they're allowed, I'll run Lighthouse locally (in headless
-  Chromium, so no API quota) and finish Section 1, including the
-  barber-to-`employeeId` mapping.
-- **The repo is public**, not private as the brief assumes. Please
-  switch it to private before real business details land in it.
-- **The frontend-design, design-system and accessibility-review skills
-  aren't installed** in this environment. Without them I'll follow the
-  same standards by hand (tokens, type scale, a contrast check and a
-  WCAG 2.1 AA pass), unless you can add the skills.
+- **How the audit was run:** raw HTML of every page in the sitemap,
+  Lighthouse 12 run locally (3 mobile runs, 1 desktop) and a
+  Playwright render on an emulated iPhone 13, all on 2026-10-13.
+- **Test-environment limits:** the test browser can't play the hero
+  video (it lacks the H.264 video codec, which Chrome on a phone has),
+  and the network proxy blocked a few third-party hosts (Blismo's API,
+  an icon CDN, analytics). Lighthouse therefore measured the hero's
+  "video not supported" message as the largest element. The
+  **Performance and LCP numbers are indicative, not exact.** The SEO,
+  accessibility and markup findings are unaffected. Please glance at
+  the site on your own phone to confirm the video plays.
+- **The repo is public**, not private as the brief assumes.
 
 ---
 
 ## 1. Audit of the current site
 
-Legend: ✅ confirmed · 🟡 reported by you, not yet verified by me ·
-⬜ not checked yet (blocked)
+Every finding below was confirmed in the live HTML or a Lighthouse run.
+
+### Before scores (Lighthouse 12, 2026-10-13)
+| | Performance | Accessibility | Best practices | SEO |
+|---|---|---|---|---|
+| Mobile (median of 3; range 42–67) | **65** | 98 | 96 | 92 |
+| Desktop | **84** | 98 | 96 | 92 |
+
+Mobile metrics (median run): FCP 2.8 s, LCP 8.0 s (see caveat), TBT
+230 ms, CLS 0.006, page weight 949 KiB, 42 script tags.
+
+**Why 92 SEO and 98 accessibility are misleading:** Lighthouse only
+checks technical basics. It counts `alt=""` as "decorative image, fine"
+even on the barbers' photos, and it doesn't check local SEO at all
+(business schema, NAP, service pages). The real gaps are below.
 
 ### On-page SEO
-| Check | Status | Notes |
+| Check | Finding |
+|---|---|
+| `<title>` | Home: "BLACK & GOLD EAST BAY". No service, no city, all caps. Other pages: "CONTACT — …", "Appointments — …" |
+| Meta description | **Empty on every page** (`content=""`) |
+| h1 | **None on any page.** Home starts at h2 "Meet your Professionals", then jumps to h4 (Lighthouse flags the heading order) |
+| Image alt text | **All 8 images have empty alt**, including the 5 barber photos and the logo |
+| Open Graph / Twitter | Share image is "Screenshot 2025-09-25 at 9.17.52 PM.png", served over `http://`. Twitter card is the small `summary` type. No description |
+| Structured data | Two blocks, both effectively empty: `WebSite` with `description: ""` and `LocalBusiness` with `address: ""` and `openingHours: ""`. No HairSalon type, phone, geo, hours, sameAs or booking action |
+| Canonicals | Present and correct. `/home` duplicates `/` but canonicalizes to it |
+| sitemap.xml | Lists `/home`, `/contact` and **`/appointments`** |
+| `/appointments` page | **Still shows Squarespace's template filler text** ("It all begins with an idea. Maybe you want to launch a business…"), and it's in the sitemap, so Google can index it |
+| robots.txt | Squarespace default. It also blocks ~30 AI crawlers (GPTBot, ClaudeBot, Google-Extended…), an "AI crawler blocking" toggle. This is a choice for the owner, not a bug |
+| `/cart` link | A cart icon showing "0" in the header links to an empty store cart. The shop has no store |
+| Typos | "BOOK AN **APPOINMENT**" (home button). The heading on `/appointments` is spelled correctly |
+| Hours | "SUN - MON // 10AM - 3PM" and "TUE - SAT // 10AM - 3PM" (Monday appears in both ranges and every day shows the same hours) |
+| NAP formatting | "846 B St" vs "846 B St." on the same page. Phone shown as "510.397.6642" |
+| Link text | The 5 per-barber links all say "View availability", with no barber name in the link (bad for screen readers and SEO) |
+
+### Content
+- **Services:** 3 described (Haircuts; Beard Grooming & Shaping; Hot
+  Towel Shave). **No prices, no durations**, no individual pages.
+- **Barbers:** 5 cards (photo, name, "View availability"). No bio,
+  specialty or Instagram.
+- **Missing entirely:** map, directions, parking, FAQ, reviews,
+  gallery, privacy page, any mention of "barber"/"barbershop" +
+  "Hayward" in a heading.
+- Good existing copy to keep: "over 3 decades of combined experience"
+  (owner to confirm) and the service descriptions.
+
+### Barber → Blismo ID mapping (from the live site's markup)
+| Barber | `employeeId` | Photo file |
 |---|---|---|
-| `<title>` tag | ⬜ | Should name the service, the city and the brand |
-| Meta description | 🟡 empty | Google writes its own snippet when this is missing, and it's often a poor one |
-| Heading structure (one h1, logical order) | ⬜ | Squarespace templates often use styled text instead of real headings |
-| Image alt text | ⬜ | |
-| Open Graph image | 🟡 a screenshot | This is what shows when the link is shared in iMessage, IG or Facebook |
-| Structured data (JSON-LD) | ⬜ | Squarespace adds basic `Organization`/`LocalBusiness` data only when the business info is filled in. I expect no `HairSalon` type, no hours and no booking action |
-| Canonical URLs | ⬜ | |
-| sitemap.xml / robots.txt | ⬜ | Squarespace generates these automatically |
-| Broken or empty links | 🟡 `/cart` | A store cart on a site with no store makes it look unfinished |
-| Typos | 🟡 "APPOINMENT" | Also check for others |
-| Hours | 🟡 conflicting | The site shows "SUN-MON 10AM-3PM" and "TUE-SAT 10AM-3PM" (see the open questions) |
+| Jamie Anabeza | 1275 | BARBERS-5.jpg |
+| Francis G | 1276 | BARBERS-1.jpg |
+| Mel | 1327 | BARBERS-2.jpg |
+| Joe the Barber | 1321 | BARBERS-4.jpg |
+| Mark DeGuzman | 1320 | BARBERS-3.jpg |
+
+Paired by order in the page (photo → name → link for each card). The
+names couldn't be cross-checked inside Blismo, because Blismo's API was
+blocked in the test browser. One tap on each link confirms it.
 
 ### Design, mobile, performance, accessibility
-| Check | Status |
+| Check | Finding |
 |---|---|
-| Visual design and brand use | ⬜ |
-| Mobile layout, tap targets, Book Now above the fold | ⬜ |
-| Taps from landing to Blismo | ⬜ |
-| Tap-to-call (`tel:` link) | ⬜ |
-| Lighthouse mobile: Performance / A11y / Best Practices / SEO | ⬜ (this becomes the "before" baseline) |
-| Core Web Vitals (LCP, CLS, INP) | ⬜ |
-| Color contrast (gold on black) | ⬜ |
-| Keyboard navigation and focus visibility | ⬜ |
+| Brand | Black + bright gold (≈ #FFC500) with a blurred background video hero. The colors are strong and worth keeping |
+| Typography | **5 font families** load (Sometype Mono, Raleway, Bebas Neue, Space Grotesk, Clarkson). Inconsistent, and extra download |
+| Above the fold (iPhone 13) | Logo text, a mostly empty video area, then Book Now. No value proposition, no city, no phone |
+| Taps to Blismo | 1 (Book Now). Good, keep it |
+| Tap-to-call | Only in the footer and on `/contact` (`tel:5103976642`). Not near the top |
+| Performance | ~1.5 s of render-blocking CSS/JS, ~445 KiB of offscreen images loaded up front, ~260 KiB of unused CSS/JS, heavy main-thread work (2.6 s), console errors from Squarespace scripts |
+| Contrast | Gold on black and black on gold both pass AA comfortably |
+| Keyboard | A "Skip to Content" link exists. Focus styles come from the template defaults |
 
-### Third-party data inconsistency (found while blocked)
-A NewsBreak aggregator listing for the shop
+### Third-party data inconsistency
+A NewsBreak aggregator listing
 ([source](https://www.newsbreak.com/local/spot/b_vd0ml86xjuyy)) shows a
 third set of hours: Mon 10–3, Tue–Fri 10–6, Sat 9–6, Sun 10–3. **I'm not
 using these.** It does show that the hours aren't consistent across the
-web. That hurts local ranking, and the owner may lose walk-ins who see
-the wrong times. It's another reason to confirm the real hours with him.
+web, which hurts local ranking and can send walk-ins at the wrong time.
 
 ---
 
 ## 2. Local SEO gap list
 
-These are things strong local barbershop sites have. I'll mark each one
-as confirmed missing once I can see the site.
+These are things strong local barbershop sites have. **Every item below
+is missing from the current site** (confirmed in the audit), except the
+Google Business Profile, which lives off-site.
 
 1. **`HairSalon` JSON-LD** (a subtype of `LocalBusiness`) with the name,
    address, geo coordinates, phone, `openingHoursSpecification`,
@@ -257,8 +286,8 @@ answered.
 
 **Barbers**
 5. Each barber's **Instagram handle** (all five are placeholders now).
-6. Confirm the **barber roster** and the **Blismo employee IDs** (I'll
-   pull these from the live site once access is allowed).
+6. Confirm the **barber roster** and the **Blismo employee IDs**
+   (pulled from the live site; see the mapping in Section 1).
 7. Each barber's **specialty and a short bio**, in their own words.
 8. **Barber photos**, and each barber's permission to use them.
 
@@ -286,10 +315,18 @@ answered.
 20. After launch, **who updates the shop hours** (on the site and on
     Google), and how often do they change?
 
+**Found in the audit**
+21. Does the background **video hero** matter to him? (It's the
+    heaviest thing on the page. The redesign would lead with a photo
+    and keep the video optional.)
+22. **AI crawler blocking:** Squarespace currently blocks AI assistants
+    (ChatGPT, Claude, Google's AI) from reading the site. Keep blocking,
+    or allow them so AI search can recommend the shop?
+23. Is "**over 3 decades of combined experience**" still accurate to
+    use?
+
 ---
 
 ## Next step
-Approve or adjust this plan, choose the hosting and content-editing
-approach, and (ideally) allow the domains in Section 0 so I can finish
-the audit and capture the "before" Lighthouse scores. I won't start
-building until you say so.
+Approve the plan (sitemap in Section 4 and the remaining items above).
+Then I'll start the build on `feature/redesign` in small commits.
