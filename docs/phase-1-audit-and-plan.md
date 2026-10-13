@@ -1,7 +1,7 @@
 # Phase 1 — Audit & Plan
 
-Status: **audit complete; plan approved in part (see Decisions).
-Waiting on the go-ahead to start building.**
+Status: **approved 2026-10-13; Phase 2 build done** (see README.md,
+PITCH.md and HANDOFF.md).
 
 ## Decisions (2026-10-13)
 - **Hosting:** Netlify (a preview deploy with noindex during the pitch).
