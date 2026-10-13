@@ -14,67 +14,51 @@ import { chromium } from "playwright-core";
 const root = new URL("../", import.meta.url);
 const pub = (name) => new URL(`public/${name}`, root);
 
-const fontData = (path) =>
-    readFileSync(new URL(`node_modules/${path}`, root)).toString("base64");
-const displayFont = fontData(
-    "@fontsource-variable/big-shoulders-display/files/" +
-        "big-shoulders-display-latin-wght-normal.woff2",
+const fileData = (path) =>
+    readFileSync(new URL(path, root)).toString("base64");
+const sansFont = fileData(
+    "node_modules/@fontsource-variable/jost/files/" +
+        "jost-latin-wght-normal.woff2",
 );
-const sansFont = fontData(
-    "@fontsource-variable/instrument-sans/files/" +
-        "instrument-sans-latin-wght-normal.woff2",
-);
+// The shop's own logo files (from its current website).
+const badge = fileData("src/assets/shop/logo-badge.png");
+const mark = fileData("src/assets/shop/logo-mark.webp");
 
-const GOLD = "#ffc500";
-const SHADE = "#7a5d00";
+const GOLD = "#fcb125";
 const INK = "#000000";
-const MUTED = "#a6a6a6";
+const MUTED = "#b3b3b3";
 
 const baseCss = `
     @font-face {
-        font-family: Display;
-        src: url(data:font/woff2;base64,${displayFont}) format("woff2");
+        font-family: Jost;
+        src: url(data:font/woff2;base64,${sansFont}) format("woff2");
         font-weight: 100 900;
     }
-    @font-face {
-        font-family: Sans;
-        src: url(data:font/woff2;base64,${sansFont}) format("woff2");
-        font-weight: 400 700;
-    }
     * { margin: 0; box-sizing: border-box; }
-    body { background: ${INK}; }
-    .gilded {
-        color: ${GOLD};
-        text-shadow:
-            0.006em 0.006em 0 ${SHADE},
-            0.012em 0.012em 0 ${SHADE},
-            0.018em 0.018em 0 ${SHADE},
-            0.024em 0.024em 0 ${SHADE},
-            0.03em 0.03em 0 ${SHADE},
-            0.036em 0.036em 0 ${SHADE},
-            0.042em 0.042em 0 ${SHADE},
-            0.048em 0.048em 0 ${SHADE};
-    }
+    body { background: ${INK}; font-family: Jost; }
 `;
 
 const ogHtml = `<!doctype html><html><head><style>${baseCss}
     body {
-        width: 1200px; height: 630px; padding: 72px 80px;
-        display: flex; flex-direction: column; justify-content: space-between;
-        border-bottom: 12px solid ${GOLD};
+        width: 1200px; height: 630px; padding: 0 90px;
+        display: flex; align-items: center; gap: 72px;
+        border-bottom: 14px solid ${GOLD};
     }
-    .name {
-        font: 800 34px/1 Display; letter-spacing: 0.06em;
-        text-transform: uppercase; color: ${GOLD};
+    img { width: 300px; height: auto; }
+    h1 {
+        font-weight: 400; font-size: 76px; line-height: 1.05;
+        letter-spacing: 0.12em; text-transform: uppercase; color: #fff;
     }
-    h1 { font: 900 150px/0.9 Display; }
-    .meta { font: 500 32px/1.3 Sans; color: ${MUTED}; }
-    .meta strong { color: #ededed; font-weight: 600; }
+    p {
+        margin-top: 28px; font-size: 30px; color: ${MUTED};
+        letter-spacing: 0.04em;
+    }
 </style></head><body>
-    <div class="name">Black &amp; Gold East Bay</div>
-    <h1 class="gilded">Precision cuts<br>in Hayward</h1>
-    <p class="meta"><strong>846 B St, Hayward, CA</strong>
-        &nbsp;&nbsp;Book online with your barber</p>
+    <img src="data:image/png;base64,${badge}" alt="">
+    <div>
+        <h1>Precision cuts in Hayward</h1>
+        <p>846 B St, Hayward, CA · Book online</p>
+    </div>
 </body></html>`;
 
 const iconHtml = (size) => `<!doctype html><html><head><style>${baseCss}
@@ -82,8 +66,10 @@ const iconHtml = (size) => `<!doctype html><html><head><style>${baseCss}
         width: ${size}px; height: ${size}px; display: flex;
         align-items: center; justify-content: center;
     }
-    span { font: 900 ${Math.round(size * 0.5)}px/1 Display; }
-</style></head><body><span class="gilded">B&amp;G</span></body></html>`;
+    img { width: ${Math.round(size * 0.9)}px; }
+</style></head><body>
+    <img src="data:image/webp;base64,${mark}" alt="">
+</body></html>`;
 
 /* Packs PNG images into a .ico container (PNG-in-ICO, Vista+). */
 function buildIco(pngs) {
@@ -114,7 +100,10 @@ const page = await browser.newPage();
 async function render(html, width, height) {
     await page.setViewportSize({ width, height });
     await page.setContent(html);
-    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(async () => {
+        await document.fonts.ready;
+        await Promise.all([...document.images].map((i) => i.decode()));
+    });
     return page.screenshot({ type: "png" });
 }
 
