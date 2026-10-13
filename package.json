@@ -1,0 +1,26 @@
+{
+    "name": "black-and-gold-redesign",
+    "private": true,
+    "type": "module",
+    "version": "0.1.0",
+    "scripts": {
+        "dev": "astro dev",
+        "build": "astro check && astro build && node scripts/check-site.mjs",
+        "preview": "astro preview",
+        "check:site": "node scripts/check-site.mjs",
+        "images": "node scripts/generate-images.mjs"
+    },
+    "dependencies": {
+        "@astrojs/check": "^0.9.10",
+        "@astrojs/sitemap": "^3.7.4",
+        "@fontsource-variable/big-shoulders-display": "^5.3.0",
+        "@fontsource-variable/instrument-sans": "^5.3.0",
+        "@tailwindcss/vite": "^4.3.3",
+        "astro": "^7.3.8",
+        "tailwindcss": "^4.3.3",
+        "typescript": "^6.0.3"
+    },
+    "devDependencies": {
+        "playwright-core": "^1.64.0"
+    }
+}
