@@ -140,7 +140,7 @@ the website. So "who updates hours?" is mostly "who updates shop hours
 on the site *and* on Google, and how often does that happen?" (Rarely:
 holidays and schedule changes.)
 
-### Option A — Static site: Astro + Tailwind on Netlify / Vercel / Cloudflare Pages
+### Option A — Static site: Astro + Tailwind on Netlify/Vercel/Cloudflare
 - **What it is:** Astro builds plain HTML/CSS files ahead of time and
   ships almost no JavaScript. The host serves those files from a CDN.
 - **Pros:** the best possible speed and Core Web Vitals. Full control
