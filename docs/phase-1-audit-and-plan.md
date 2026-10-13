@@ -1,6 +1,18 @@
 # Phase 1 — Audit & Plan
 
-Status: **draft, waiting for approval. No build work has started.**
+Status: **decisions made; waiting on network access to finish the
+audit before building.**
+
+## Decisions (2026-10-13)
+- **Hosting:** Netlify (a preview deploy with noindex during the pitch).
+- **Framework:** Astro + Tailwind.
+- **Content editing:** one TypeScript content file for now. A git-based
+  CMS can be added later on top of the same file.
+- **Services:** three dedicated service pages, folded back into one if
+  the owner can't supply enough distinct detail.
+- **Audit:** finish Section 1 (live-site audit, before Lighthouse
+  scores, Blismo barber IDs) before building, once the domains below
+  are allowed.
 
 ---
 
