@@ -1,0 +1,137 @@
+---
+/* One page per service, generated from src/content/site.ts. */
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BookingBand from "../../components/BookingBand.astro";
+import Button from "../../components/Button.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import {
+    booking,
+    business,
+    services,
+    type Service,
+} from "../../content/site";
+import { formatDuration, formatPrice } from "../../lib/format";
+
+export const getStaticPaths = (() =>
+    services.map((service) => ({
+        params: { slug: service.slug },
+        props: { service },
+    }))) satisfies GetStaticPaths;
+
+interface Props {
+    service: Service;
+}
+
+const { service } = Astro.props;
+const others = services.filter((s) => s.slug !== service.slug);
+const siteUrl = new URL("/", Astro.site).href;
+
+const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.name,
+    serviceType: service.name,
+    description: service.description.join(" "),
+    provider: { "@id": `${siteUrl}#business` },
+    areaServed: { "@type": "City", name: business.address.city },
+    ...(service.priceUsd !== null && {
+        offers: {
+            "@type": "Offer",
+            price: service.priceUsd,
+            priceCurrency: "USD",
+        },
+    }),
+};
+---
+
+<BaseLayout
+    title={service.seoTitle}
+    description={service.seoDescription}
+    breadcrumbs={[
+        { name: "Services", path: "/services/" },
+        { name: service.name, path: `/services/${service.slug}/` },
+    ]}
+    schema={[serviceSchema]}
+>
+    <PageHeader title={service.h1}>
+        <dl class="mt-5 flex flex-wrap gap-x-8 gap-y-2">
+            <div class="flex gap-2">
+                <dt class="text-muted">Price</dt>
+                <dd class={service.priceUsd ? "text-text" : "tbd"}>
+                    {service.priceUsd ? formatPrice(service.priceUsd) : "TBD"}
+                </dd>
+            </div>
+            <div class="flex gap-2">
+                <dt class="text-muted">Time</dt>
+                <dd class={service.durationMinutes ? "text-text" : "tbd"}>
+                    {service.durationMinutes
+                        ? formatDuration(service.durationMinutes)
+                        : "TBD"}
+                </dd>
+            </div>
+        </dl>
+    </PageHeader>
+
+    <div
+        class="mx-auto mt-10 grid max-w-page gap-10 px-gutter
+            md:grid-cols-[minmax(0,40rem)_1fr]"
+    >
+        <div class="space-y-4 text-lg">
+            {service.description.map((paragraph) => <p>{paragraph}</p>)}
+            <div class="pt-4">
+                <Button href={booking.url} size="lg">
+                    Book {service.name.toLowerCase()}
+                </Button>
+            </div>
+        </div>
+
+        <aside
+            aria-labelledby="includes-heading"
+            class="self-start rounded-panel border border-line bg-surface
+                p-6"
+        >
+            <h2 id="includes-heading" class="text-2xl text-text">
+                What’s included
+            </h2>
+            <ul class="mt-3 space-y-2 text-muted">
+                {
+                    service.includes.map((item) => (
+                        <li class="flex gap-3">
+                            <span aria-hidden="true" class="text-gold">
+                                —
+                            </span>
+                            {item}
+                        </li>
+                    ))
+                }
+            </ul>
+        </aside>
+    </div>
+
+    <section
+        aria-labelledby="other-services-heading"
+        class="mx-auto mt-section max-w-page px-gutter"
+    >
+        <h2 id="other-services-heading" class="text-3xl text-text">
+            Other services
+        </h2>
+        <ul class="mt-4 flex flex-wrap gap-x-8 gap-y-2">
+            {
+                others.map((other) => (
+                    <li>
+                        <a
+                            href={`/services/${other.slug}/`}
+                            class="inline-block py-2 text-lg underline
+                                hover:text-gold"
+                        >
+                            {other.name}
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </section>
+
+    <BookingBand />
+</BaseLayout>

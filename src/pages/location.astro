@@ -1,0 +1,81 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Address from "../components/Address.astro";
+import BookingBand from "../components/BookingBand.astro";
+import Button from "../components/Button.astro";
+import HoursList from "../components/HoursList.astro";
+import InstagramDM from "../components/InstagramDM.astro";
+import MapEmbed from "../components/MapEmbed.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { business } from "../content/site";
+import { mapsDirectionsUrl } from "../lib/maps";
+---
+
+<BaseLayout
+    title="Barbershop near Downtown Hayward, CA 94541 | Black & Gold"
+    description="Find Black & Gold East Bay at 846 B St, Hayward, CA
+        94541. Directions, parking, hours and phone for our barbershop."
+    breadcrumbs={[{ name: "Location", path: "/location/" }]}
+>
+    <PageHeader
+        title="Barbershop in Downtown Hayward"
+        intro="We’re on B Street in Hayward, CA 94541."
+    />
+
+    <div
+        class="mx-auto mt-10 grid max-w-page gap-10 px-gutter
+            lg:grid-cols-[3fr_2fr]"
+    >
+        <MapEmbed />
+
+        <div class="space-y-8 text-muted">
+            <div>
+                <h2 class="text-2xl text-text">Address</h2>
+                <div class="mt-3">
+                    <Address />
+                </div>
+                <div class="mt-4">
+                    <Button href={mapsDirectionsUrl} external>
+                        Get directions
+                    </Button>
+                </div>
+            </div>
+
+            <HoursList headingLevel="h2" />
+
+            <div>
+                <h2 class="text-2xl text-text">Parking and directions</h2>
+                {
+                    business.parkingNotes || business.directionsNotes ? (
+                        <div class="mt-3 space-y-2">
+                            {business.directionsNotes && (
+                                <p>{business.directionsNotes}</p>
+                            )}
+                            {business.parkingNotes && (
+                                <p>{business.parkingNotes}</p>
+                            )}
+                        </div>
+                    ) : (
+                        <p class="mt-3">
+                            <span class="tbd">Parking details TBD</span>
+                        </p>
+                    )
+                }
+            </div>
+
+            <div>
+                <h2 class="text-2xl text-text">Questions?</h2>
+                <p class="mt-3">
+                    Call us or send the shop a message on Instagram.
+                </p>
+                <InstagramDM
+                    instagram={business.instagram}
+                    who={business.name}
+                    class="mt-4"
+                />
+            </div>
+        </div>
+    </div>
+
+    <BookingBand />
+</BaseLayout>

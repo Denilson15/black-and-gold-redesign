@@ -1,0 +1,24 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BookingBand from "../../components/BookingBand.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import ServiceList from "../../components/ServiceList.astro";
+---
+
+<BaseLayout
+    title="Barber Services & Prices in Hayward | Black & Gold East Bay"
+    description="Haircuts and fades, beard trims and hot towel shaves at
+        Black & Gold East Bay, 846 B St, Hayward. See services and book
+        online."
+    breadcrumbs={[{ name: "Services", path: "/services/" }]}
+>
+    <PageHeader
+        title="Barber services in Hayward"
+        intro="Every service is booked online with the barber of your
+            choice. Prices and times are being confirmed with the shop."
+    />
+    <div class="mx-auto mt-10 max-w-page px-gutter">
+        <ServiceList />
+    </div>
+    <BookingBand />
+</BaseLayout>

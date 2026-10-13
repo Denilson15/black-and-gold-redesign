@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import BarberCard from "../components/BarberCard.astro";
+import BookingBand from "../components/BookingBand.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { barbers, business } from "../content/site";
+import { firstName } from "../lib/format";
+
+// Built from the barber list so it never goes stale.
+const names = barbers.map((b) => firstName(b.name));
+const nameList =
+    names.length > 1
+        ? `${names.slice(0, -1).join(", ")} or ${names.at(-1)}`
+        : names.join("");
+---
+
+<BaseLayout
+    title="Barbers in Hayward, CA | Black & Gold East Bay"
+    description={`Meet the barbers at Black & Gold East Bay in Hayward ` +
+        `and book directly with ${nameList}.`}
+    breadcrumbs={[{ name: "Barbers", path: "/barbers/" }]}
+>
+    <PageHeader
+        title="Meet the barbers"
+        intro={`${business.experienceLine} Tap a barber to see their ` +
+            "open times and book."}
+    />
+
+    <ul
+        class="mx-auto mt-10 grid max-w-page gap-6 px-gutter sm:grid-cols-2
+            lg:grid-cols-3"
+        role="list"
+    >
+        {
+            barbers.map((barber) => (
+                <li class="flex">
+                    <BarberCard barber={barber} />
+                </li>
+            ))
+        }
+    </ul>
+
+    <BookingBand heading="Not sure who to pick?" />
+</BaseLayout>

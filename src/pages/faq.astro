@@ -1,0 +1,85 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import BookingBand from "../components/BookingBand.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { business, faq } from "../content/site";
+
+/*
+ * FAQPage structured data uses confirmed answers only. (Google no
+ * longer shows FAQ rich results for most businesses, but the markup
+ * still describes the page accurately.)
+ */
+const answered = faq.filter((item) => item.answer !== null);
+const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: answered.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+};
+---
+
+<BaseLayout
+    title="FAQ: Walk-ins, Kids’ Cuts, Payment | Black & Gold East Bay"
+    description="Answers about walk-ins, kids’ haircuts, payment,
+        cancellations and parking at Black & Gold East Bay barbershop in
+        Hayward, CA."
+    breadcrumbs={[{ name: "FAQ", path: "/faq/" }]}
+    schema={answered.length > 0 ? [faqSchema] : []}
+>
+    <PageHeader title="Frequently asked questions" />
+
+    <div class="mx-auto mt-10 max-w-page px-gutter">
+        <div class="max-w-prose divide-y divide-line border-y border-line">
+            {
+                faq.map((item) => (
+                    <details class="group py-2">
+                        <summary
+                            class="flex min-h-12 cursor-pointer list-none
+                                items-center justify-between gap-4 py-2
+                                text-xl text-text hover:text-gold
+                                [&::-webkit-details-marker]:hidden"
+                        >
+                            <span class="font-semibold">
+                                {item.question}
+                            </span>
+                            <span
+                                aria-hidden="true"
+                                class="font-display text-3xl text-gold
+                                    transition-transform
+                                    group-open:rotate-45"
+                            >
+                                +
+                            </span>
+                        </summary>
+                        <div class="pb-4 text-lg text-muted">
+                            {item.answer ? (
+                                <p>{item.answer}</p>
+                            ) : (
+                                <p>
+                                    <span class="tbd">Answer TBD</span>
+                                    <span class="mt-2 block">
+                                        Call{" "}
+                                        <a
+                                            href={`tel:${business.phoneE164}`}
+                                            class="whitespace-nowrap
+                                                text-text underline
+                                                hover:text-gold"
+                                        >
+                                            {business.phoneDisplay}
+                                        </a>{" "}
+                                        and we’ll answer it.
+                                    </span>
+                                </p>
+                            )}
+                        </div>
+                    </details>
+                ))
+            }
+        </div>
+    </div>
+
+    <BookingBand heading="Still have a question?" />
+</BaseLayout>

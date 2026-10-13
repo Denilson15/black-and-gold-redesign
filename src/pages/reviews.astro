@@ -1,0 +1,65 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import BookingBand from "../components/BookingBand.astro";
+import Button from "../components/Button.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { reviews } from "../content/site";
+import { reviewsUrl } from "../lib/maps";
+
+// Real reviews only, and only those the owner approved.
+const approved = reviews.filter((r) => r.approvedByOwner);
+---
+
+<BaseLayout
+    title="Reviews | Black & Gold East Bay Barbershop, Hayward"
+    description="Read what clients say about Black & Gold East Bay, a
+        barbershop at 846 B St in Hayward, CA, and leave your own
+        review."
+    breadcrumbs={[{ name: "Reviews", path: "/reviews/" }]}
+>
+    <PageHeader
+        title="What clients say"
+        intro="Reviews come straight from Google. Had a good cut? Leaving
+            a review helps other people in Hayward find us."
+    />
+
+    <div class="mx-auto mt-10 max-w-page px-gutter">
+        {
+            approved.length > 0 ? (
+                <ul class="grid gap-8 md:grid-cols-2" role="list">
+                    {approved.map((review) => (
+                        <li>
+                            <figure class="border-l-2 border-gold pl-5">
+                                <p
+                                    class="text-gold"
+                                    role="img"
+                                    aria-label={`${review.rating} of 5`}
+                                >
+                                    {"★".repeat(review.rating)}
+                                </p>
+                                <blockquote class="mt-2 text-lg">
+                                    “{review.quote}”
+                                </blockquote>
+                                <figcaption class="mt-3 text-muted">
+                                    {review.author}, on {review.source}
+                                </figcaption>
+                            </figure>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p class="max-w-prose text-lg text-muted">
+                    Our reviews live on Google, where you can read them
+                    all and add your own.
+                </p>
+            )
+        }
+        <div class="mt-6 flex flex-wrap gap-3">
+            <Button href={reviewsUrl} variant="secondary" external>
+                Read and write reviews on Google
+            </Button>
+        </div>
+    </div>
+
+    <BookingBand />
+</BaseLayout>
