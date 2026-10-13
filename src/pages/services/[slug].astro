@@ -55,29 +55,28 @@ const serviceSchema = {
     schema={[serviceSchema]}
 >
     <PageHeader title={service.h1}>
-        <dl class="mt-5 flex flex-wrap gap-x-8 gap-y-2">
-            <div class="flex gap-2">
-                <dt class="text-muted">Price</dt>
-                <dd class={service.priceUsd ? "text-text" : "tbd"}>
-                    {service.priceUsd ? formatPrice(service.priceUsd) : "TBD"}
-                </dd>
-            </div>
-            <div class="flex gap-2">
-                <dt class="text-muted">Time</dt>
-                <dd class={service.durationMinutes ? "text-text" : "tbd"}>
-                    {service.durationMinutes
-                        ? formatDuration(service.durationMinutes)
-                        : "TBD"}
-                </dd>
-            </div>
-        </dl>
+        {
+            (service.priceUsd !== null ||
+                service.durationMinutes !== null) && (
+                <p class="mt-5 flex gap-6 text-xl text-text">
+                    {service.priceUsd !== null && (
+                        <span>{formatPrice(service.priceUsd)}</span>
+                    )}
+                    {service.durationMinutes !== null && (
+                        <span class="text-muted">
+                            {formatDuration(service.durationMinutes)}
+                        </span>
+                    )}
+                </p>
+            )
+        }
     </PageHeader>
 
     <div
         class="mx-auto mt-10 grid max-w-page gap-10 px-gutter
             md:grid-cols-[minmax(0,40rem)_1fr]"
     >
-        <div class="space-y-4 text-lg">
+        <div class="space-y-4 text-lg text-text/90">
             {service.description.map((paragraph) => <p>{paragraph}</p>)}
             <div class="pt-4">
                 <Button href={booking.url} size="lg">
@@ -88,13 +87,15 @@ const serviceSchema = {
 
         <aside
             aria-labelledby="includes-heading"
-            class="self-start rounded-panel border border-line bg-surface
-                p-6"
+            class="self-start border-t border-gold pt-6"
         >
-            <h2 id="includes-heading" class="text-2xl text-text">
+            <h2
+                id="includes-heading"
+                class="heading-sm text-text"
+            >
                 What’s included
             </h2>
-            <ul class="mt-3 space-y-2 text-muted">
+            <ul class="mt-4 space-y-2 text-muted">
                 {
                     service.includes.map((item) => (
                         <li class="flex gap-3">
@@ -113,7 +114,7 @@ const serviceSchema = {
         aria-labelledby="other-services-heading"
         class="mx-auto mt-section max-w-page px-gutter"
     >
-        <h2 id="other-services-heading" class="text-3xl text-text">
+        <h2 id="other-services-heading" class="text-2xl text-text">
             Other services
         </h2>
         <ul class="mt-4 flex flex-wrap gap-x-8 gap-y-2">

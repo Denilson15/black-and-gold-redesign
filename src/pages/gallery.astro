@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import BookingBand from "../components/BookingBand.astro";
 import Button from "../components/Button.astro";
@@ -6,8 +7,6 @@ import PageHeader from "../components/PageHeader.astro";
 import { business, gallery } from "../content/site";
 
 const instagramUrl = `https://www.instagram.com/${business.instagram.handle}/`;
-// Empty slots shown until the owner approves real photos.
-const placeholderSlots = 6;
 ---
 
 <BaseLayout
@@ -21,61 +20,35 @@ const placeholderSlots = 6;
         intro="Fades, tapers and beard work from our chairs on B Street."
     />
 
-    <div class="mx-auto mt-10 max-w-page px-gutter">
+    <div class="mx-auto mt-12 max-w-page px-gutter">
         {
-            gallery.length > 0 ? (
+            gallery.length > 0 && (
                 <ul
-                    class="grid grid-cols-2 gap-3 md:grid-cols-3"
+                    class="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3"
                     role="list"
                 >
                     {gallery.map((photo) => (
                         <li>
-                            <img
+                            <Image
                                 src={photo.src}
                                 alt={photo.alt}
-                                width={photo.width}
-                                height={photo.height}
-                                loading="lazy"
-                                decoding="async"
-                                class="aspect-square w-full rounded-panel
-                                    object-cover"
+                                widths={[320, 480, 720]}
+                                sizes="(min-width: 48rem) 33vw, 50vw"
+                                class="aspect-square w-full object-cover"
                             />
                         </li>
                     ))}
                 </ul>
-            ) : (
-                <>
-                    <ul
-                        class="grid grid-cols-2 gap-3 md:grid-cols-3"
-                        aria-label="Photo slots awaiting the shop’s photos"
-                    >
-                        {Array.from({ length: placeholderSlots }, () => (
-                            <li
-                                class="flex aspect-square items-center
-                                    justify-center rounded-panel border
-                                    border-dashed border-line-strong
-                                    p-4 text-center text-sm text-muted"
-                            >
-                                Photo coming soon
-                            </li>
-                        ))}
-                    </ul>
-                    <p class="mt-6 max-w-prose text-lg text-muted">
-                        Our latest work is on Instagram while we put this
-                        gallery together.
-                    </p>
-                    <div class="mt-4">
-                        <Button
-                            href={instagramUrl}
-                            variant="secondary"
-                            external
-                        >
-                            See recent cuts on Instagram
-                        </Button>
-                    </div>
-                </>
             )
         }
+        <p class="mt-8 max-w-prose text-lg text-muted">
+            See our latest work on Instagram.
+        </p>
+        <div class="mt-5">
+            <Button href={instagramUrl} variant="secondary" external>
+                @{business.instagram.handle} on Instagram
+            </Button>
+        </div>
     </div>
 
     <BookingBand />

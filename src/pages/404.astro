@@ -9,18 +9,17 @@ import { booking, business } from "../content/site";
     description="This page doesn't exist. Book an appointment or head back
         to the Black & Gold East Bay home page."
 >
-    <div class="mx-auto max-w-page px-gutter pt-16">
-        <h1 class="gilded font-display text-hero font-black">
-            Wrong chair
-        </h1>
-        <p class="mt-6 max-w-prose text-xl">
+    <div class="mx-auto max-w-page px-gutter py-section">
+        <div class="h-px w-12 bg-gold" aria-hidden="true"></div>
+        <h1 class="mt-6 text-hero font-normal text-text">Wrong chair</h1>
+        <p class="mt-6 max-w-prose text-xl text-muted">
             That page doesn’t exist. It may have moved when the site was
             redesigned.
         </p>
-        <div class="mt-8 flex flex-wrap gap-3">
+        <div class="mt-10 flex flex-wrap gap-3">
             <Button href={booking.url} size="lg">Book now</Button>
             <Button href="/" variant="secondary" size="lg">
-                Go to the home page
+                Home page
             </Button>
             <Button
                 href={`tel:${business.phoneE164}`}
