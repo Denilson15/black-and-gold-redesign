@@ -1,0 +1,35 @@
+---
+/* Closing call to action at the bottom of inner pages. */
+import Button from "./Button.astro";
+import { booking, business } from "../content/site";
+
+interface Props {
+    heading?: string;
+}
+
+const { heading = "Ready for a fresh cut?" } = Astro.props;
+---
+
+<section
+    class="mx-auto mt-section max-w-page px-gutter"
+    aria-labelledby="booking-band-heading"
+>
+    <div
+        class="flex flex-col gap-5 border-t-2 border-gold pt-8 sm:flex-row
+            sm:items-center sm:justify-between"
+    >
+        <h2 id="booking-band-heading" class="text-3xl text-text">
+            {heading}
+        </h2>
+        <div class="flex flex-wrap gap-3">
+            <Button href={booking.url} size="lg">Book now</Button>
+            <Button
+                href={`tel:${business.phoneE164}`}
+                variant="secondary"
+                size="lg"
+            >
+                Call {business.phoneDisplay}
+            </Button>
+        </div>
+    </div>
+</section>

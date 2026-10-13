@@ -1,0 +1,21 @@
+---
+/*
+ * "Concept preview" marker. Shown only while CONCEPT_MODE is true in
+ * src/content/site.ts. Remove at handoff by flipping that flag.
+ */
+import { CONCEPT_MODE } from "../content/site";
+---
+
+{
+    CONCEPT_MODE && (
+        <aside
+            aria-label="Concept preview notice"
+            class="bg-surface text-muted border-b border-line text-sm"
+        >
+            <p class="mx-auto max-w-page px-gutter py-2">
+                Concept preview, not the shop’s official site. Items
+                marked TBD are being confirmed.
+            </p>
+        </aside>
+    )
+}

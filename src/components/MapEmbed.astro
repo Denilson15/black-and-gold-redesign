@@ -1,0 +1,105 @@
+---
+/*
+ * Click-to-load map. The Google Maps iframe is heavy and sets
+ * third-party cookies, so it loads only when the visitor taps
+ * "Show map". Without JavaScript, the Google Maps link still works.
+ * States: idle (button) -> loading -> loaded, or error after 12 s.
+ */
+import { business } from "../content/site";
+import { mapsEmbedUrl, mapsSearchUrl } from "../lib/maps";
+
+const { address } = business;
+---
+
+<div
+    class="map-embed relative aspect-[4/3] overflow-hidden rounded-panel
+        border border-line bg-surface sm:aspect-[16/9]"
+    data-src={mapsEmbedUrl}
+>
+    <div
+        class="map-idle absolute inset-0 flex flex-col items-start
+            justify-end gap-3 p-5"
+    >
+        <p class="text-lg text-text">
+            {address.street}<br />
+            {`${address.city}, ${address.region} ${address.postalCode}`}
+        </p>
+        <div class="flex flex-wrap gap-3">
+            <button
+                type="button"
+                class="map-load min-h-12 rounded-control border
+                    border-line-strong px-5 font-semibold text-text
+                    hover:border-gold hover:text-gold"
+                hidden
+            >
+                Show map
+            </button>
+            <a
+                href={mapsSearchUrl}
+                class="inline-flex min-h-12 items-center text-muted
+                    underline hover:text-gold"
+                rel="noopener"
+                target="_blank"
+            >
+                Open in Google Maps
+                <span class="sr-only">(opens in a new tab)</span>
+            </a>
+        </div>
+    </div>
+    <p
+        class="map-status absolute inset-0 hidden items-center
+            justify-center p-5 text-center text-muted"
+        role="status"
+        aria-live="polite"
+    >
+    </p>
+</div>
+
+<script>
+    // Progressive enhancement: reveal the button only when JS runs.
+    for (const root of document.querySelectorAll<HTMLElement>(
+        ".map-embed",
+    )) {
+        const button = root.querySelector<HTMLButtonElement>(".map-load");
+        const idle = root.querySelector<HTMLElement>(".map-idle");
+        const status = root.querySelector<HTMLElement>(".map-status");
+        if (!button || !idle || !status) {
+            continue;
+        }
+        button.hidden = false;
+
+        const showStatus = (message: string) => {
+            status.textContent = message;
+            status.classList.remove("hidden");
+            status.classList.add("flex");
+        };
+
+        button.addEventListener("click", () => {
+            idle.classList.add("hidden");
+            showStatus("Loading map…");
+
+            const frame = document.createElement("iframe");
+            frame.src = root.dataset.src ?? "";
+            frame.title = "Map showing the shop’s location";
+            frame.loading = "lazy";
+            frame.referrerPolicy = "no-referrer-when-downgrade";
+            frame.className = "absolute inset-0 h-full w-full border-0";
+
+            // iframes don't report network errors, so use a timeout.
+            const timer = window.setTimeout(() => {
+                frame.remove();
+                idle.classList.remove("hidden");
+                showStatus("");
+                status.classList.add("hidden");
+                button.textContent = "Map didn’t load. Try again";
+            }, 12000);
+
+            frame.addEventListener("load", () => {
+                window.clearTimeout(timer);
+                status.classList.add("hidden");
+                status.classList.remove("flex");
+            });
+            root.append(frame);
+        });
+    }
+</script>

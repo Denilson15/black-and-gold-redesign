@@ -1,0 +1,15 @@
+---
+/* Standard inner-page heading: the page's single h1 plus an intro. */
+interface Props {
+    title: string;
+    intro?: string;
+}
+
+const { title, intro } = Astro.props;
+---
+
+<div class="mx-auto max-w-page px-gutter pt-10 sm:pt-14">
+    <h1 class="text-4xl text-gold">{title}</h1>
+    {intro && <p class="mt-4 max-w-prose text-lg text-muted">{intro}</p>}
+    <slot />
+</div>

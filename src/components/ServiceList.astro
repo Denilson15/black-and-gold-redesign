@@ -1,0 +1,51 @@
+---
+/*
+ * Services as a ruled price list (the way barbershops post them),
+ * not a grid of cards. Each row links to its service page.
+ */
+import { services } from "../content/site";
+import { formatDuration, formatPrice } from "../lib/format";
+
+interface Props {
+    headingLevel?: "h2" | "h3";
+}
+
+const { headingLevel: Heading = "h2" } = Astro.props;
+---
+
+<ul class="divide-y divide-line border-y border-line">
+    {
+        services.map((service) => (
+            <li>
+                <a
+                    href={`/services/${service.slug}/`}
+                    class="group grid gap-2 py-6 no-underline
+                        sm:grid-cols-[1fr_auto] sm:items-baseline
+                        sm:gap-8"
+                >
+                    <div>
+                        <Heading
+                            class="text-3xl text-text
+                                group-hover:text-gold"
+                        >
+                            {service.name}
+                        </Heading>
+                        <p class="mt-1 max-w-prose text-muted">
+                            {service.summary}
+                        </p>
+                    </div>
+                    <p class="flex gap-2 sm:justify-end">
+                        <span class={service.priceUsd ? "" : "tbd"}>
+                            {formatPrice(service.priceUsd)}
+                        </span>
+                        <span
+                            class={service.durationMinutes ? "" : "tbd"}
+                        >
+                            {formatDuration(service.durationMinutes)}
+                        </span>
+                    </p>
+                </a>
+            </li>
+        ))
+    }
+</ul>

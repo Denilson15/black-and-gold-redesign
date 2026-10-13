@@ -1,0 +1,21 @@
+---
+/* NAP block: name, address, phone. Must match Google exactly. */
+import { business } from "../content/site";
+
+const { address } = business;
+---
+
+<address class="not-italic leading-relaxed">
+    <span class="block font-semibold text-text">{business.name}</span>
+    <span class="block">{address.street}</span>
+    <span class="block">
+        {`${address.city}, ${address.region} ${address.postalCode}`}
+    </span>
+    <a
+        href={`tel:${business.phoneE164}`}
+        class="mt-1 inline-block whitespace-nowrap py-1 text-text underline
+            hover:text-gold"
+    >
+        {business.phoneDisplay}
+    </a>
+</address>

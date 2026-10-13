@@ -1,0 +1,92 @@
+---
+import Button from "./Button.astro";
+import Wordmark from "./Wordmark.astro";
+import { booking } from "../content/site";
+import { navLinks } from "../lib/nav";
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="border-b border-line bg-ink">
+    <div
+        class="mx-auto flex max-w-page items-center justify-between gap-4
+            px-gutter py-3"
+    >
+        <Wordmark />
+
+        <nav aria-label="Main" class="hidden lg:block">
+            <ul class="flex items-center gap-6">
+                {
+                    navLinks.map((link) => (
+                        <li>
+                            <a
+                                href={link.href}
+                                aria-current={
+                                    currentPath.startsWith(link.href)
+                                        ? "page"
+                                        : undefined
+                                }
+                                class="py-2 text-text no-underline
+                                    hover:text-gold
+                                    aria-[current=page]:text-gold
+                                    aria-[current=page]:underline"
+                            >
+                                {link.label}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </nav>
+
+        <div class="flex items-center gap-2">
+            <!-- Phones use the sticky bottom bar instead. -->
+            <div class="hidden md:block">
+                <Button href={booking.url}>Book now</Button>
+            </div>
+
+            <!-- Mobile menu: a native disclosure, works without JS. -->
+            <details class="group relative lg:hidden">
+                <summary
+                    class="flex min-h-12 cursor-pointer list-none
+                        items-center rounded-control border
+                        border-line-strong px-4 text-text
+                        [&::-webkit-details-marker]:hidden"
+                >
+                    <span class="group-open:hidden">Menu</span>
+                    <span class="hidden group-open:inline">Close</span>
+                </summary>
+                <nav
+                    aria-label="Main"
+                    class="absolute right-0 z-30 mt-2 w-56 rounded-panel
+                        border border-line bg-surface p-2"
+                >
+                    <ul>
+                        {
+                            navLinks.map((link) => (
+                                <li>
+                                    <a
+                                        href={link.href}
+                                        aria-current={
+                                            currentPath.startsWith(
+                                                link.href,
+                                            )
+                                                ? "page"
+                                                : undefined
+                                        }
+                                        class="block rounded-control px-3
+                                            py-3 text-text no-underline
+                                            hover:bg-ink hover:text-gold
+                                            aria-[current=page]:text-gold"
+                                    >
+                                        {link.label}
+                                    </a>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </nav>
+            </details>
+        </div>
+    </div>
+</header>

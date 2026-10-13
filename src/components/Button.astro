@@ -1,0 +1,53 @@
+---
+/*
+ * The one button/link-button component.
+ * - primary: gold, for booking. At most one per view region.
+ * - secondary: outlined, for Call / Directions / Instagram.
+ * Renders an <a> because every action on this site goes somewhere.
+ */
+interface Props {
+    href: string;
+    variant?: "primary" | "secondary";
+    size?: "md" | "lg";
+    /** Full accessible name when the visible text isn't enough. */
+    ariaLabel?: string;
+    external?: boolean;
+    class?: string;
+}
+
+const {
+    href,
+    variant = "primary",
+    size = "md",
+    ariaLabel,
+    external = false,
+    class: extraClass = "",
+} = Astro.props;
+
+const base =
+    "inline-flex items-center justify-center gap-2 font-semibold " +
+    "rounded-control transition-colors duration-150 " +
+    "min-h-12 select-none text-center";
+
+const variants = {
+    primary: "bg-gold text-ink hover:bg-gold-bright",
+    secondary:
+        "border border-line-strong text-text hover:border-gold " +
+        "hover:text-gold",
+};
+
+const sizes = {
+    md: "px-5 text-base",
+    lg: "px-7 text-lg min-h-14",
+};
+---
+
+<a
+    href={href}
+    aria-label={ariaLabel}
+    class:list={[base, variants[variant], sizes[size], extraClass]}
+    {...external && { rel: "noopener", target: "_blank" }}
+>
+    <slot />
+    {external && <span class="sr-only">(opens in a new tab)</span>}
+</a>

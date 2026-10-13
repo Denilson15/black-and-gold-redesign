@@ -1,0 +1,48 @@
+---
+/*
+ * "Message on Instagram" for a shop or barber handle.
+ * - Primary link opens a DM via ig.me (the Instagram app on phones).
+ * - A small fallback link opens the public profile.
+ * - Renders nothing for missing or unconfirmed handles, so we never
+ *   link to a stranger's account.
+ */
+import type { InstagramHandle } from "../content/site";
+import Button from "./Button.astro";
+
+interface Props {
+    instagram: InstagramHandle | null;
+    /** Whose inbox, for the accessible label: "Mel", "the shop". */
+    who: string;
+    class?: string;
+}
+
+const { instagram, who, class: extraClass = "" } = Astro.props;
+const show = instagram !== null && instagram.confirmed;
+---
+
+{
+    show && (
+        <div class:list={["flex flex-col gap-1", extraClass]}>
+            <Button
+                href={`https://ig.me/m/${instagram.handle}`}
+                variant="secondary"
+                external
+            >
+                <!-- Screen readers hear "Message Mel on Instagram". -->
+                <span>
+                    Message <span class="sr-only">{who}</span> on Instagram
+                </span>
+            </Button>
+            <a
+                href={`https://www.instagram.com/${instagram.handle}/`}
+                class="self-start py-1 text-sm text-muted underline
+                    hover:text-gold"
+                rel="noopener"
+                target="_blank"
+            >
+                View @{instagram.handle} on Instagram
+                <span class="sr-only">(opens in a new tab)</span>
+            </a>
+        </div>
+    )
+}

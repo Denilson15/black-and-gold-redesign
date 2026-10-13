@@ -1,0 +1,49 @@
+---
+/*
+ * Shop hours. Until the owner confirms them, this shows an honest
+ * "being confirmed" state with a call link instead of guessed hours.
+ */
+import { business, hours } from "../content/site";
+import { formatHoursRow } from "../lib/format";
+
+interface Props {
+    /** Heading level for the "Hours" label, to keep outlines logical. */
+    headingLevel?: "h2" | "h3";
+    class?: string;
+}
+
+const { headingLevel: Heading = "h3", class: extraClass = "" } =
+    Astro.props;
+const isConfirmed = hours.confirmed && hours.week.length > 0;
+---
+
+<div class={extraClass}>
+    <Heading class="text-2xl text-text">Hours</Heading>
+    {
+        isConfirmed ? (
+            <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1">
+                {hours.week.map((row) => (
+                    <>
+                        <dt class="text-muted">{row.day}</dt>
+                        <dd>{formatHoursRow(row)}</dd>
+                    </>
+                ))}
+            </dl>
+        ) : (
+            <p class="mt-3 text-muted">
+                <span class="tbd">Hours TBD</span>
+                <span class="mt-2 block">
+                    We’re confirming our hours. Call{" "}
+                    <a
+                        href={`tel:${business.phoneE164}`}
+                        class="whitespace-nowrap text-text underline
+                            hover:text-gold"
+                    >
+                        {business.phoneDisplay}
+                    </a>{" "}
+                    or check open times when you book.
+                </span>
+            </p>
+        )
+    }
+</div>

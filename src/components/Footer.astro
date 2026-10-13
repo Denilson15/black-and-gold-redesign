@@ -1,0 +1,72 @@
+---
+import Address from "./Address.astro";
+import HoursList from "./HoursList.astro";
+import InstagramDM from "./InstagramDM.astro";
+import { business } from "../content/site";
+import { navLinks } from "../lib/nav";
+import { mapsDirectionsUrl } from "../lib/maps";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-section border-t border-line bg-ink text-muted">
+    <div
+        class="mx-auto grid max-w-page gap-10 px-gutter py-12
+            md:grid-cols-3"
+    >
+        <div>
+            <h2 class="text-2xl text-text">Visit</h2>
+            <div class="mt-3">
+                <Address />
+            </div>
+            <a
+                href={mapsDirectionsUrl}
+                class="mt-2 inline-block py-1 underline hover:text-gold"
+                rel="noopener"
+                target="_blank"
+            >
+                Get directions
+                <span class="sr-only">(opens Google Maps in a new tab)</span>
+            </a>
+        </div>
+
+        <HoursList headingLevel="h2" />
+
+        <div>
+            <h2 class="text-2xl text-text">Follow</h2>
+            <InstagramDM
+                instagram={business.instagram}
+                who={business.name}
+                class="mt-3"
+            />
+            <nav aria-label="Footer" class="mt-6">
+                <ul class="flex flex-wrap gap-x-5 gap-y-1">
+                    {
+                        navLinks.map((link) => (
+                            <li>
+                                <a
+                                    href={link.href}
+                                    class="inline-block py-2
+                                        hover:text-gold"
+                                >
+                                    {link.label}
+                                </a>
+                            </li>
+                        ))
+                    }
+                    <li>
+                        <a
+                            href="/privacy/"
+                            class="inline-block py-2 hover:text-gold"
+                        >
+                            Privacy
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <p class="mx-auto max-w-page px-gutter pb-8 text-sm">
+        © {year} {business.name}. Appointments are booked on Blismo.
+    </p>
+</footer>

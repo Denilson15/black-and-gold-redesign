@@ -1,0 +1,34 @@
+---
+/*
+ * Sticky bottom bar on phones: Book now + Call, always one tap away.
+ * Hidden from tablet width up, where the header button is visible.
+ */
+import { booking, business } from "../content/site";
+---
+
+<nav
+    aria-label="Book or call"
+    class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-ink/95
+        px-gutter pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]
+        backdrop-blur md:hidden"
+>
+    <div class="grid grid-cols-[2fr_1fr] gap-3">
+        <a
+            href={booking.url}
+            class="flex min-h-12 items-center justify-center
+                rounded-control bg-gold font-semibold text-ink
+                hover:bg-gold-bright"
+        >
+            Book now
+        </a>
+        <a
+            href={`tel:${business.phoneE164}`}
+            aria-label={`Call ${business.name} at ${business.phoneDisplay}`}
+            class="flex min-h-12 items-center justify-center
+                rounded-control border border-line-strong font-semibold
+                text-text hover:border-gold hover:text-gold"
+        >
+            Call
+        </a>
+    </div>
+</nav>
