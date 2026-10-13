@@ -12,7 +12,7 @@ import tailwindcss from "@tailwindcss/vite";
  */
 const site = process.env.URL ?? "http://localhost:4321";
 
-// Short names for the two font files preloaded in BaseLayout.astro.
+// Short name for the font file preloaded in BaseLayout.astro.
 /** @param {string} pkg @param {string} file */
 const fontFile = (pkg, file) =>
     fileURLToPath(
@@ -36,20 +36,10 @@ export default defineConfig({
             // Regex aliases so the "?url" suffix is kept on the import.
             alias: [
                 {
-                    find: /^@font\/display(\?.*)?$/,
-                    replacement:
-                        fontFile(
-                            "big-shoulders-display",
-                            "big-shoulders-display-latin-wght-normal.woff2",
-                        ) + "$1",
-                },
-                {
                     find: /^@font\/sans(\?.*)?$/,
                     replacement:
-                        fontFile(
-                            "instrument-sans",
-                            "instrument-sans-latin-wght-normal.woff2",
-                        ) + "$1",
+                        fontFile("jost", "jost-latin-wght-normal.woff2") +
+                        "$1",
                 },
             ],
         },

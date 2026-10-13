@@ -11,7 +11,6 @@ import MobileBookingBar from "../components/MobileBookingBar.astro";
 import { CONCEPT_MODE, business } from "../content/site";
 import { breadcrumbSchema, hairSalonSchema } from "../lib/schema";
 // Preloaded so the hero renders in its real font without a layout jump.
-import displayFontUrl from "@font/display?url";
 import sansFontUrl from "@font/sans?url";
 
 interface Props {
@@ -54,13 +53,6 @@ const jsonLd = [
         <meta
             name="viewport"
             content="width=device-width, initial-scale=1"
-        />
-        <link
-            rel="preload"
-            href={displayFontUrl}
-            as="font"
-            type="font/woff2"
-            crossorigin
         />
         <link
             rel="preload"
