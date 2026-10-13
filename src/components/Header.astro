@@ -1,35 +1,35 @@
 ---
 import Button from "./Button.astro";
-import Wordmark from "./Wordmark.astro";
+import Logo from "./Logo.astro";
 import { booking } from "../content/site";
 import { navLinks } from "../lib/nav";
 
 const currentPath = Astro.url.pathname;
+const isCurrent = (href: string) => currentPath.startsWith(href);
 ---
 
-<header class="border-b border-line bg-ink">
+<header class="sticky top-0 z-30 border-b border-line bg-ink/95
+    backdrop-blur">
     <div
         class="mx-auto flex max-w-page items-center justify-between gap-4
             px-gutter py-3"
     >
-        <Wordmark />
+        <Logo />
 
         <nav aria-label="Main" class="hidden lg:block">
-            <ul class="flex items-center gap-6">
+            <ul class="flex items-center gap-7">
                 {
                     navLinks.map((link) => (
                         <li>
                             <a
                                 href={link.href}
                                 aria-current={
-                                    currentPath.startsWith(link.href)
-                                        ? "page"
-                                        : undefined
+                                    isCurrent(link.href) ? "page" : undefined
                                 }
-                                class="py-2 text-text no-underline
-                                    hover:text-gold
-                                    aria-[current=page]:text-gold
-                                    aria-[current=page]:underline"
+                                class="py-2 text-sm uppercase
+                                    tracking-[var(--tracking-caps)]
+                                    text-text no-underline hover:text-gold
+                                    aria-[current=page]:text-gold"
                             >
                                 {link.label}
                             </a>
@@ -49,8 +49,8 @@ const currentPath = Astro.url.pathname;
             <details class="group relative lg:hidden">
                 <summary
                     class="flex min-h-12 cursor-pointer list-none
-                        items-center rounded-control border
-                        border-line-strong px-4 text-text
+                        items-center px-3 text-sm uppercase
+                        tracking-[var(--tracking-caps)] text-text
                         [&::-webkit-details-marker]:hidden"
                 >
                     <span class="group-open:hidden">Menu</span>
@@ -58,8 +58,8 @@ const currentPath = Astro.url.pathname;
                 </summary>
                 <nav
                     aria-label="Main"
-                    class="absolute right-0 z-30 mt-2 w-56 rounded-panel
-                        border border-line bg-surface p-2"
+                    class="absolute right-0 z-30 mt-2 w-60 border
+                        border-line bg-charcoal p-2"
                 >
                     <ul>
                         {
@@ -68,15 +68,15 @@ const currentPath = Astro.url.pathname;
                                     <a
                                         href={link.href}
                                         aria-current={
-                                            currentPath.startsWith(
-                                                link.href,
-                                            )
+                                            isCurrent(link.href)
                                                 ? "page"
                                                 : undefined
                                         }
-                                        class="block rounded-control px-3
-                                            py-3 text-text no-underline
-                                            hover:bg-ink hover:text-gold
+                                        class="block px-3 py-3 text-sm
+                                            uppercase
+                                            tracking-[var(--tracking-caps)]
+                                            text-text no-underline
+                                            hover:text-gold
                                             aria-[current=page]:text-gold"
                                     >
                                         {link.label}

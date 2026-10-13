@@ -1,9 +1,10 @@
 ---
 /*
- * One barber: photo, name, specialty, bio, and two actions.
- * Booking is the dominant action; Instagram is for questions and only
- * appears for a confirmed handle.
+ * One barber, for white sections: portrait, name, optional specialty
+ * and bio, and two actions. Booking is the dominant action; Instagram
+ * only appears for a confirmed handle.
  */
+import { Image } from "astro:assets";
 import Button from "./Button.astro";
 import InstagramDM from "./InstagramDM.astro";
 import { barberBookingUrl, type Barber } from "../content/site";
@@ -18,70 +19,60 @@ const { barber, headingLevel: Heading = "h2" } = Astro.props;
 const first = firstName(barber.name);
 ---
 
-<!-- Phones: photo beside text. Tablet up: photo on top. -->
-<article
-    class="grid w-full grid-cols-[6.5rem_minmax(0,1fr)] overflow-hidden
-        rounded-panel border border-line bg-surface sm:flex sm:flex-col"
->
+<article class="flex w-full flex-col text-text-dark">
     {
         barber.photo ? (
-            <img
+            <Image
                 src={barber.photo}
                 alt={`${barber.name}, barber at Black & Gold East Bay`}
-                width="600"
-                height="750"
-                loading="lazy"
-                decoding="async"
-                class="h-full w-full object-cover sm:aspect-[4/5]
-                    sm:h-auto"
+                widths={[320, 480, 720]}
+                sizes="(min-width: 64rem) 22vw, (min-width: 40rem) 45vw,
+                    48vw"
+                class="aspect-[4/5] w-full object-cover object-top"
             />
         ) : (
-            // Empty state until the barber approves a photo.
             <div
-                class="flex h-full w-full items-center justify-center
-                    bg-ink sm:aspect-[4/5] sm:h-auto"
+                class="flex aspect-[4/5] w-full items-center justify-center
+                    bg-line-paper"
                 role="img"
                 aria-label={`Photo of ${barber.name} coming soon`}
             >
-                <span
-                    class="gilded font-display text-6xl font-extrabold
-                        leading-none sm:text-[7rem]"
-                    aria-hidden="true"
-                >
+                <span class="text-6xl font-medium" aria-hidden="true">
                     {initial(barber.name)}
                 </span>
             </div>
         )
     }
 
-    <div class="flex flex-1 flex-col gap-3 p-4 sm:gap-4 sm:p-5">
+    <div class="flex flex-1 flex-col gap-3 pt-4">
         <div>
-            <Heading class="text-3xl text-text">{barber.name}</Heading>
+            <Heading class="text-sm sm:text-base">
+                {barber.name}
+            </Heading>
             {
                 barber.specialty && (
-                    <p class="mt-1 text-gold">{barber.specialty}</p>
+                    <p class="mt-1 text-sm text-muted-dark">
+                        {barber.specialty}
+                    </p>
                 )
             }
         </div>
+        {barber.bio && <p class="text-muted-dark">{barber.bio}</p>}
 
-        {
-            barber.bio ? (
-                <p class="text-muted">{barber.bio}</p>
-            ) : (
-                <p>
-                    <span class="tbd">Bio and specialty coming soon</span>
-                </p>
-            )
-        }
-
-        <div class="mt-auto flex flex-col gap-3 pt-2">
+        <div class="mt-auto flex flex-col gap-2 pt-1">
             <Button
                 href={barberBookingUrl(barber)}
+                variant="dark"
                 ariaLabel={`Book with ${barber.name}`}
+                class="w-full px-2 text-xs tracking-[0.08em] sm:text-sm"
             >
                 Book with {first}
             </Button>
-            <InstagramDM instagram={barber.instagram} who={barber.name} />
+            <InstagramDM
+                instagram={barber.instagram}
+                who={barber.name}
+                tone="light"
+            />
         </div>
     </div>
 </article>

@@ -1,0 +1,28 @@
+---
+/*
+ * The shop's BG badge mark plus the name. The badge is the owner's own
+ * logo from the current site (permission to confirm before launch).
+ */
+import { Image } from "astro:assets";
+import logoMark from "../assets/shop/logo-mark.webp";
+import { business } from "../content/site";
+---
+
+<a href="/" class="flex items-center gap-3 py-1 no-underline">
+    <Image
+        src={logoMark}
+        alt=""
+        width={44}
+        height={44}
+        densities={[2, 3]}
+        loading="eager"
+        class="size-10 sm:size-11"
+    />
+    <span
+        class="text-[0.8125rem] font-medium uppercase leading-tight
+            tracking-[0.16em] text-text sm:text-base
+            sm:tracking-[var(--tracking-caps-wide)]"
+    >
+        {business.name}
+    </span>
+</a>

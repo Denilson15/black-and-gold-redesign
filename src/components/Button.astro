@@ -1,13 +1,15 @@
 ---
 /*
  * The one button/link-button component.
- * - primary: gold, for booking. At most one per view region.
- * - secondary: outlined, for Call / Directions / Instagram.
+ * - primary: gold, for booking. The dominant action in any view.
+ * - secondary: outlined, for Call / Directions / Instagram on black.
+ * - dark: solid black, for booking on white or gold sections.
+ * - outline-dark: outlined, for secondary actions on white or gold.
  * Renders an <a> because every action on this site goes somewhere.
  */
 interface Props {
     href: string;
-    variant?: "primary" | "secondary";
+    variant?: "primary" | "secondary" | "dark" | "outline-dark";
     size?: "md" | "lg";
     /** Full accessible name when the visible text isn't enough. */
     ariaLabel?: string;
@@ -25,20 +27,25 @@ const {
 } = Astro.props;
 
 const base =
-    "inline-flex items-center justify-center gap-2 font-semibold " +
-    "rounded-control transition-colors duration-150 " +
-    "min-h-12 select-none text-center";
+    "inline-flex items-center justify-center gap-2 rounded-control " +
+    "text-center font-medium uppercase no-underline " +
+    "tracking-[var(--tracking-caps)] transition-colors duration-150 " +
+    "min-h-12 select-none";
 
 const variants = {
-    primary: "bg-gold text-ink hover:bg-gold-bright",
+    primary: "bg-gold text-text-dark hover:bg-gold-bright",
     secondary:
         "border border-line-strong text-text hover:border-gold " +
         "hover:text-gold",
+    dark: "bg-ink text-text hover:bg-charcoal",
+    "outline-dark":
+        "border border-text-dark text-text-dark hover:bg-text-dark " +
+        "hover:text-text",
 };
 
 const sizes = {
-    md: "px-5 text-base",
-    lg: "px-7 text-lg min-h-14",
+    md: "px-6 text-sm",
+    lg: "px-8 text-base min-h-14",
 };
 ---
 

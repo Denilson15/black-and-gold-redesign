@@ -8,8 +8,9 @@ interface Props {
 const { title, intro } = Astro.props;
 ---
 
-<div class="mx-auto max-w-page px-gutter pt-10 sm:pt-14">
-    <h1 class="text-4xl text-gold">{title}</h1>
-    {intro && <p class="mt-4 max-w-prose text-lg text-muted">{intro}</p>}
+<div class="mx-auto max-w-page px-gutter pt-14 sm:pt-20">
+    <div class="h-px w-12 bg-gold" aria-hidden="true"></div>
+    <h1 class="mt-6 text-4xl text-text">{title}</h1>
+    {intro && <p class="mt-5 max-w-prose text-lg text-muted">{intro}</p>}
     <slot />
 </div>

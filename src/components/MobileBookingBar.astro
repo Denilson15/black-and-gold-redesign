@@ -16,7 +16,8 @@ import { booking, business } from "../content/site";
         <a
             href={booking.url}
             class="flex min-h-12 items-center justify-center
-                rounded-control bg-gold font-semibold text-ink
+                rounded-control bg-gold text-sm font-medium uppercase
+                tracking-[var(--tracking-caps)] text-text-dark
                 hover:bg-gold-bright"
         >
             Book now
@@ -25,7 +26,8 @@ import { booking, business } from "../content/site";
             href={`tel:${business.phoneE164}`}
             aria-label={`Call ${business.name} at ${business.phoneDisplay}`}
             class="flex min-h-12 items-center justify-center
-                rounded-control border border-line-strong font-semibold
+                rounded-control border border-line-strong text-sm
+                font-medium uppercase tracking-[var(--tracking-caps)]
                 text-text hover:border-gold hover:text-gold"
         >
             Call

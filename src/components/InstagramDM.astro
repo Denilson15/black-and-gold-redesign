@@ -11,12 +11,19 @@ import Button from "./Button.astro";
 
 interface Props {
     instagram: InstagramHandle | null;
-    /** Whose inbox, for the accessible label: "Mel", "the shop". */
+    /** Whose inbox, for screen readers: "Mel", "Black & Gold East Bay". */
     who: string;
+    /** Colors for black (default) or white/gold backgrounds. */
+    tone?: "dark" | "light";
     class?: string;
 }
 
-const { instagram, who, class: extraClass = "" } = Astro.props;
+const {
+    instagram,
+    who,
+    tone = "dark",
+    class: extraClass = "",
+} = Astro.props;
 const show = instagram !== null && instagram.confirmed;
 ---
 
@@ -25,23 +32,21 @@ const show = instagram !== null && instagram.confirmed;
         <div class:list={["flex flex-col gap-1", extraClass]}>
             <Button
                 href={`https://ig.me/m/${instagram.handle}`}
-                variant="secondary"
+                variant={tone === "dark" ? "secondary" : "outline-dark"}
                 external
             >
-                <!-- Screen readers hear "Message Mel on Instagram". -->
                 <span>
                     Message <span class="sr-only">{who}</span> on Instagram
                 </span>
             </Button>
             <a
                 href={`https://www.instagram.com/${instagram.handle}/`}
-                class="self-start py-1 text-sm text-muted underline
-                    hover:text-gold"
+                class="self-start py-1 text-sm underline hover:no-underline"
                 rel="noopener"
                 target="_blank"
             >
-                View @{instagram.handle} on Instagram
-                <span class="sr-only">(opens in a new tab)</span>
+                @{instagram.handle}
+                <span class="sr-only">on Instagram (opens in a new tab)</span>
             </a>
         </div>
     )

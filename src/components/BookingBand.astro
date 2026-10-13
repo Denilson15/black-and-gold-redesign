@@ -1,31 +1,38 @@
 ---
-/* Closing call to action at the bottom of inner pages. */
+/* Gold call-to-action band near the bottom of pages. */
 import Button from "./Button.astro";
 import { booking, business } from "../content/site";
 
 interface Props {
     heading?: string;
+    /** Skip the top margin when following another white section. */
+    flush?: boolean;
 }
 
-const { heading = "Ready for a fresh cut?" } = Astro.props;
+const { heading = "Ready for your next cut?", flush = false } = Astro.props;
 ---
 
 <section
-    class="mx-auto mt-section max-w-page px-gutter"
+    class:list={[
+        "on-light bg-paper text-text-dark",
+        { "mt-section": !flush, "border-t border-line-paper": flush },
+    ]}
     aria-labelledby="booking-band-heading"
 >
     <div
-        class="flex flex-col gap-5 border-t-2 border-gold pt-8 sm:flex-row
-            sm:items-center sm:justify-between"
+        class="mx-auto flex max-w-page flex-col gap-6 px-gutter py-16
+            sm:flex-row sm:items-center sm:justify-between"
     >
-        <h2 id="booking-band-heading" class="text-3xl text-text">
+        <h2 id="booking-band-heading" class="text-3xl">
             {heading}
         </h2>
         <div class="flex flex-wrap gap-3">
-            <Button href={booking.url} size="lg">Book now</Button>
+            <Button href={booking.url} variant="dark" size="lg">
+                Book now
+            </Button>
             <Button
                 href={`tel:${business.phoneE164}`}
-                variant="secondary"
+                variant="outline-dark"
                 size="lg"
             >
                 Call {business.phoneDisplay}
