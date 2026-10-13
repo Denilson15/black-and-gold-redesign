@@ -1,0 +1,130 @@
+---
+/*
+ * Shared page shell: <head> SEO tags, structured data, header, footer,
+ * sticky mobile booking bar and the concept banner.
+ */
+import "../styles/global.css";
+import ConceptBanner from "../components/ConceptBanner.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import MobileBookingBar from "../components/MobileBookingBar.astro";
+import { CONCEPT_MODE, business } from "../content/site";
+import { breadcrumbSchema, hairSalonSchema } from "../lib/schema";
+// Preloaded so the hero renders in its real font without a layout jump.
+import displayFontUrl from "@font/display?url";
+import sansFontUrl from "@font/sans?url";
+
+interface Props {
+    /** Unique per page; aim for under 60 characters. */
+    title: string;
+    /** Unique per page; aim for 120–155 characters. */
+    description: string;
+    /** For inner pages: [{ name, path }] after Home. */
+    breadcrumbs?: { name: string; path: string }[];
+    /** Extra JSON-LD objects for this page. */
+    schema?: Record<string, unknown>[];
+}
+
+const { title, breadcrumbs, schema = [] } = Astro.props;
+// Allow descriptions to be wrapped across lines in page files.
+const description = Astro.props.description.replace(/\s+/g, " ").trim();
+
+const siteUrl = new URL("/", Astro.site).href;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL("/og-image.png", Astro.site).href;
+
+const jsonLd = [
+    hairSalonSchema(siteUrl),
+    ...(breadcrumbs
+        ? [
+              breadcrumbSchema(siteUrl, [
+                  { name: "Home", path: "/" },
+                  ...breadcrumbs,
+              ]),
+          ]
+        : []),
+    ...schema,
+];
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+        />
+        <link
+            rel="preload"
+            href={displayFontUrl}
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link
+            rel="preload"
+            href={sansFontUrl}
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical} />
+        {
+            /* Concept build: keep it out of search results. */
+            CONCEPT_MODE && (
+                <meta name="robots" content="noindex, nofollow" />
+            )
+        }
+
+        <meta name="theme-color" content="#000000" />
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="sitemap" href="/sitemap-index.xml" />
+
+        <!-- Social share cards (iMessage, Instagram, Facebook, X). -->
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={business.name} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta
+            property="og:image:alt"
+            content={`${business.name} — barbershop in Hayward, CA`}
+        />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImage} />
+
+        <script
+            type="application/ld+json"
+            set:html={JSON.stringify(
+                jsonLd.length === 1 ? jsonLd[0] : jsonLd,
+            )}
+        />
+    </head>
+    <body class="flex flex-col">
+        <a
+            href="#main"
+            class="sr-only z-50 bg-gold px-4 py-3 font-semibold text-ink
+                focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
+        >
+            Skip to content
+        </a>
+        <ConceptBanner />
+        <Header />
+        <main id="main" class="flex-1">
+            <slot />
+        </main>
+        <Footer />
+        <MobileBookingBar />
+    </body>
+</html>
